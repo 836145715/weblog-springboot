@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: weblog
+
+  profiles:
+#    默认激活开发环境
+    active: dev
