@@ -2,6 +2,8 @@ package com.zmx.weblog.web.controller;
 
 
 import com.zmx.weblog.common.aspect.ApiOperationLog;
+import com.zmx.weblog.common.enums.ResponseCodeEnum;
+import com.zmx.weblog.common.exception.BizException;
 import com.zmx.weblog.common.utils.Response;
 import com.zmx.weblog.web.model.User;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +32,11 @@ public class TestController {
             return Response.fail(errorMsg);
         }
         return Response.success();
+    }
+
+    @PostMapping("/test2")
+    public Response test2(@RequestBody @Validated User user, BindingResult bindingResult) {
+       int i = 1/0;
+       return Response.success();
     }
 }
