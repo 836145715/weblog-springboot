@@ -6,8 +6,4 @@ spring:
 #    默认激活开发环境
     active: dev
 
-  jackson:
-    # 设置后台返参，若字段值为 null, 则不返回
-    default-property-inclusion: non_null
-    # 设置时间格式
-    date-format: yyyy-MM-dd HH:mm:ss
+
