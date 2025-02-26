@@ -1,27 +1,32 @@
 package com.example.weblog.web;
 
+import com.zmx.weblog.common.domain.dos.UserDO;
+import com.zmx.weblog.common.domain.mapper.UserMapper;
+import com.zmx.weblog.web.WeblogWebApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import java.util.Date;
 
-@SpringBootTest(classes = WeblogApplicationTests.class)
+@SpringBootTest(classes = WeblogWebApplication.class)
 @Slf4j
 public class WeblogApplicationTests {
 
-    @Test
-    void contextLoads() {
-        log.info("测试");
-    }
+    @Autowired
+    private UserMapper userMapper; // 确保 userMapper 被正确注入
 
     @Test
-    void testLog(){
-        log.info("这是一行Info级别日志");
-        log.warn("这是一行Warn级别日志");
-        log.error("这是一行Error级别日志");
+    void inertTest() {
+        // 构建数据库实体类
+        UserDO userDO = UserDO.builder()
+                .username("犬小哈")
+                .password("123456")
+                .createTime(new Date())
+                .updateTime(new Date())
+                .isDeleted(false)
+                .build();
 
-        //占位符
-        String author = "zmx";
-        log.info("作者的名字是{}", author);
+        userMapper.insert(userDO);
     }
-
 }
