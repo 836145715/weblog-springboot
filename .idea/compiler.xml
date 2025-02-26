@@ -6,9 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="weblog-web" />
         <module name="weblog-module-admin" />
         <module name="weblog-module-common" />
+        <module name="weblog-web" />
+        <module name="weblog-module-jwt" />
       </profile>
     </annotationProcessing>
   </component>
@@ -16,6 +17,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="weblog-module-admin" options="-parameters" />
       <module name="weblog-module-common" options="-parameters" />
+      <module name="weblog-module-jwt" options="-parameters" />
       <module name="weblog-web" options="-parameters" />
     </option>
   </component>

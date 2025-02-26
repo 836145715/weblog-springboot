@@ -26,6 +26,7 @@
         <module>weblog-web</module>
         <module>weblog-module-admin</module>
         <module>weblog-module-common</module>
+        <module>weblog-module-jwt</module>
     </modules>
 
     <!-- 版本号统一管理 -->
@@ -57,13 +58,7 @@
     <dependencyManagement>
         <dependencies>
 
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.28</version>
-                <scope>provided</scope>
-            </dependency>
-
+<!--            本项目中的引用-->
             <dependency>
                 <groupId>com.zmx</groupId>
                 <artifactId>weblog-module-admin</artifactId>
@@ -75,6 +70,22 @@
                 <artifactId>weblog-module-common</artifactId>
                 <version>${revision}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.zmx</groupId>
+                <artifactId>weblog-module-jwt</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.28</version>
+                <scope>provided</scope>
+            </dependency>
+
 
             <!-- 常用工具库 -->
             <dependency>

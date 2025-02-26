@@ -25,3 +25,9 @@ spring:
       connection-timeout: 30000
       # 用于测试连接的SQL查询
       connection-test-query: SELECT 1
+
+  security:
+    user:
+      name: admin
+      password: 123456
+
