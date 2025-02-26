@@ -20,7 +20,7 @@ public class WeblogApplicationTests {
     void inertTest() {
         // 构建数据库实体类
         UserDO userDO = UserDO.builder()
-                .username("犬小哈")
+                .username("6666")
                 .password("123456")
                 .createTime(new Date())
                 .updateTime(new Date())
