@@ -7,3 +7,9 @@ spring:
     active: dev
 
 
+
+jwt:
+  # 签发人
+  issuer: zmx
+  # 秘钥
+  secret: YxF4Es8DzGXcIrFQqZGzg3EkV1CasbxToLxariE4Fm0G8smKjsuAuj4l3d7DBR4zGCk/9YBZuW2nL0qxYFfbfw==
