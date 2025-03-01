@@ -16,9 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author: 犬小哈
- * @url: www.quanxiaoha.com
- * @date: 2023-08-27 17:27
  * @description: 用户未登录访问受保护的资源
  **/
 @Slf4j
