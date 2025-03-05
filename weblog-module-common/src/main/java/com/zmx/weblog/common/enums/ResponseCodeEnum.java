@@ -18,7 +18,11 @@ public enum ResponseCodeEnum {
 
     UNAUTHORIZED("20002", "无访问权限"),
 
+    USER_NOT_FOUND("20003","用户不存在！"),
+
     FORBIDDEN("20004", "演示账号仅支持查询操作！"),
+
+
 
     ;
 
