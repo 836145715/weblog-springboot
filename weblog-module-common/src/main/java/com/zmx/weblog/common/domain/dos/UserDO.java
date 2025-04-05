@@ -10,14 +10,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @TableName("t_user")
 public class UserDO {
-    
+
     @TableId(type = IdType.AUTO)
     private Long id;
 

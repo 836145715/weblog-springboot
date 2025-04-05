@@ -1,6 +1,6 @@
 package com.zmx.weblog.admin.controller;
 
-import com.zmx.weblog.admin.model.vo.UpdateAdminUserPasswordReqVO;
+import com.zmx.weblog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
 import com.zmx.weblog.admin.service.AdminUserService;
 import com.zmx.weblog.common.aspect.ApiOperationLog;
 import com.zmx.weblog.common.utils.Response;
@@ -27,4 +27,13 @@ public class AdminUserController {
     public Response updatePassword(@RequestBody @Validated UpdateAdminUserPasswordReqVO updateAdminUserPasswordReqVO) {
         return userService.updatePassword(updateAdminUserPasswordReqVO);
     }
+
+    @PostMapping("/user/info")
+    @ApiOperation(value = "获取用户信息")
+    @ApiOperationLog(description = "获取用户信息")
+    public Response findUserInfo() {
+        return userService.findUserInfo();
+    }
+
+
 }

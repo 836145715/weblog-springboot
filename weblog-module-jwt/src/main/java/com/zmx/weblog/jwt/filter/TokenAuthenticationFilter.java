@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -82,7 +83,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                             userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     // 将 authentication 存入 ThreadLocal，方便后续获取用户信息
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    SecurityContext context = SecurityContextHolder.getContext();
+                    context.setAuthentication(authentication);
                 }
             }
         }
