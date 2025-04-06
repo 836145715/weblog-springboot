@@ -18,5 +18,6 @@ public interface AdminCategoryService {
 
     Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO);
 
+    Response findCategorySelectList();
 
 }

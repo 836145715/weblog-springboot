@@ -13,6 +13,7 @@ import com.zmx.weblog.common.domain.dos.CategoryDO;
 import com.zmx.weblog.common.domain.mapper.CategoryMapper;
 import com.zmx.weblog.common.enums.ResponseCodeEnum;
 import com.zmx.weblog.common.exception.BizException;
+import com.zmx.weblog.common.model.vo.SelectRspVO;
 import com.zmx.weblog.common.utils.PageResponse;
 import com.zmx.weblog.common.utils.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -106,5 +107,21 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     public Response deleteCategory(DeleteCategoryReqVO reqVO) {
         categoryMapper.deleteById(reqVO.getId());
         return Response.success();
+    }
+
+    @Override
+    public Response findCategorySelectList() {
+        //查询所有分类
+        List<CategoryDO> categoryDOList = categoryMapper.selectList(new LambdaQueryWrapper<>());
+        List<SelectRspVO> vos = null;
+        //DO转为VO
+        if(CollectionUtils.isNotEmpty(categoryDOList)){
+            vos = categoryDOList.stream()
+                    .map(category->SelectRspVO.builder()
+                            .label(category.getName())
+                            .value(category.getId()).build())
+                            .collect(Collectors.toList());
+        }
+        return Response.success(vos);
     }
 }

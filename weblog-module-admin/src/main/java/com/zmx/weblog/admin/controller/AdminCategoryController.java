@@ -45,5 +45,12 @@ public class AdminCategoryController {
         return categoryService.deleteCategory(req);
     }
 
+    @PostMapping("/category/select/list")
+    @ApiOperation(value = "查询分类下拉列表")
+    @ApiOperationLog(description = "查询分类下拉列表")
+    public Response findCategorySelectList(){
+        return categoryService.findCategorySelectList();
+    }
+
 
 }
