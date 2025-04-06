@@ -22,7 +22,7 @@ public enum ResponseCodeEnum {
 
     FORBIDDEN("20004", "演示账号仅支持查询操作！"),
 
-
+    CATEGORY_NAME_IS_EXISTED("20005","分类名称已存在！"),
 
     ;
 
