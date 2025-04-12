@@ -1,13 +1,8 @@
 package com.zmx.weblog.admin.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zmx.weblog.admin.model.vo.tag.AddTagReqVO;
-import com.zmx.weblog.admin.model.vo.tag.DeleteTagReqVO;
-import com.zmx.weblog.admin.model.vo.tag.FindTagPageListReqVO;
-import com.zmx.weblog.admin.model.vo.tag.FindTagPageListRspVO;
+import com.zmx.weblog.admin.model.vo.tag.*;
 import com.zmx.weblog.admin.service.AdminTagService;
 import com.zmx.weblog.common.domain.dos.TagDO;
 import com.zmx.weblog.common.domain.mapper.TagMapper;
@@ -67,22 +62,8 @@ public class AdminTagServiceImpl implements AdminTagService {
         LocalDate startDate = findTagPageListReqVO.getStartDate(); // 开始时间
         LocalDate endDate = findTagPageListReqVO.getEndDate(); // 结束时间
 
-        // 构建 MyBatis Plus 查询条件
-        LambdaQueryWrapper<TagDO> queryWrapper = new LambdaQueryWrapper<>();
-
-        // 构建查询条件:
-        // 1. 标签名称模糊查询
-        // 2. 创建时间在 startDate 和 endDate 之间
-        // 3. 按创建时间倒序排序
-        queryWrapper.like(StringUtils.isNotBlank(name), TagDO::getName, name.trim())
-                .ge(Objects.nonNull(startDate), TagDO::getCreateTime, startDate)
-                .le(Objects.nonNull(endDate), TagDO::getCreateTime, endDate)
-                .orderByDesc(TagDO::getCreateTime);
-
-        // 构建分页对象,设置当前页和每页显示的记录数
-        Page<TagDO> page = new Page<>(findTagPageListReqVO.getCurrent(), findTagPageListReqVO.getSize());
-        // 执行分页查询
-        Page<TagDO> pageResult = tagMapper.selectPage(page, queryWrapper);
+        Page<TagDO> pageResult = tagMapper.findTagPageList(name, startDate, endDate, findTagPageListReqVO.getCurrent(),
+                findTagPageListReqVO.getSize());
 
         // 将 DO 转换为 VO 对象
         List<FindTagPageListRspVO> vos = null;
@@ -101,6 +82,21 @@ public class AdminTagServiceImpl implements AdminTagService {
 
         // 返回分页数据
         return PageResponse.success(pageResult, vos);
+    }
+
+    @Override
+    public Response searchTag(SearchTagReqVO searchTagReqVO) {
+        String keyword = searchTagReqVO.getKeyword();
+        List<TagDO> tagDOS = tagMapper.searchByKey(keyword);
+
+        List<SearchTagRspVO> vos = tagDOS.stream()
+                .map(tag -> SearchTagRspVO.builder()
+                        .name(tag.getName())
+                        .createTime(tag.getCreateTime())
+                        .build())
+                .collect(Collectors.toList());
+
+        return Response.success(vos);
     }
 
 }

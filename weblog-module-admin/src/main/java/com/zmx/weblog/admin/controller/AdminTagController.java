@@ -3,6 +3,7 @@ package com.zmx.weblog.admin.controller;
 import com.zmx.weblog.admin.model.vo.tag.AddTagReqVO;
 import com.zmx.weblog.admin.model.vo.tag.DeleteTagReqVO;
 import com.zmx.weblog.admin.model.vo.tag.FindTagPageListReqVO;
+import com.zmx.weblog.admin.model.vo.tag.SearchTagReqVO;
 import com.zmx.weblog.admin.service.AdminTagService;
 import com.zmx.weblog.common.aspect.ApiOperationLog;
 import com.zmx.weblog.common.utils.PageResponse;
@@ -45,4 +46,10 @@ public class AdminTagController {
         return tagService.findTagPageList(req);
     }
 
+    @PostMapping("/tag/search")
+    @ApiOperation(value = "搜索标签")
+    @ApiOperationLog(description = "搜索标签")
+    public Response searchTag(@RequestBody @Validated SearchTagReqVO req) {
+        return tagService.searchTag(req);
+    }
 }
