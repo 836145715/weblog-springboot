@@ -1,6 +1,5 @@
 package com.zmx.weblog.common.enums;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,11 +17,13 @@ public enum ResponseCodeEnum {
 
     UNAUTHORIZED("20002", "无访问权限"),
 
-    USER_NOT_FOUND("20003","用户不存在！"),
+    USER_NOT_FOUND("20003", "用户不存在！"),
 
     FORBIDDEN("20004", "演示账号仅支持查询操作！"),
 
-    CATEGORY_NAME_IS_EXISTED("20005","分类名称已存在！"),
+    CATEGORY_NAME_IS_EXISTED("20005", "分类名称已存在！"),
+
+    TAG_NAME_IS_EXISTED("20006", "标签名称已存在！"),
 
     ;
 
