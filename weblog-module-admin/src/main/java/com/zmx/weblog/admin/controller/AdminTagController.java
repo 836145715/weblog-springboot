@@ -1,5 +1,6 @@
 package com.zmx.weblog.admin.controller;
 
+import com.zmx.weblog.admin.model.vo.tag.AddBatchTagReqVO;
 import com.zmx.weblog.admin.model.vo.tag.AddTagReqVO;
 import com.zmx.weblog.admin.model.vo.tag.DeleteTagReqVO;
 import com.zmx.weblog.admin.model.vo.tag.FindTagPageListReqVO;
@@ -58,6 +59,13 @@ public class AdminTagController {
     @ApiOperationLog(description = "搜索标签")
     public Response searchTag(@RequestBody @Validated SearchTagReqVO req) {
         return tagService.searchTag(req);
+    }
+
+    @PostMapping("/tag/addBatch")
+    @ApiOperation(value = "批量添加标签")
+    @ApiOperationLog(description = "批量添加标签")
+    public Response addBatch(@RequestBody @Validated AddBatchTagReqVO req) {
+        return tagService.addBatch(req);
     }
 
 }

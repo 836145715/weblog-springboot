@@ -1,5 +1,6 @@
 package com.zmx.weblog.admin.service;
 
+import com.zmx.weblog.admin.model.vo.tag.AddBatchTagReqVO;
 import com.zmx.weblog.admin.model.vo.tag.AddTagReqVO;
 import com.zmx.weblog.admin.model.vo.tag.DeleteTagReqVO;
 import com.zmx.weblog.admin.model.vo.tag.FindTagPageListReqVO;
@@ -17,4 +18,6 @@ public interface AdminTagService {
     Response searchTag(SearchTagReqVO searchTagReqVO);
 
     Response selectList();
+
+    Response addBatch(AddBatchTagReqVO addBatchTagReqVO);
 }

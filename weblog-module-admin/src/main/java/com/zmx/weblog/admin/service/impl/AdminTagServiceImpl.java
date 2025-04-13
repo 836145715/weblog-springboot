@@ -114,4 +114,10 @@ public class AdminTagServiceImpl implements AdminTagService {
         return Response.success(vos);
     }
 
+    @Override
+    public Response addBatch(AddBatchTagReqVO addBatchTagReqVO) {
+        int count = tagMapper.insertBatch(addBatchTagReqVO.getNames());
+        return Response.success(count);
+    }
+
 }

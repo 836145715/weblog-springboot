@@ -58,4 +58,18 @@ public interface TagMapper extends BaseMapper<TagDO> {
         return selectList(new QueryWrapper<>());
     }
 
+    default int insertBatch(List<String> names) {
+        int count = 0;
+        for (String name : names) {
+            TagDO tag = selectByName(name);
+            if (Objects.isNull(tag)) {
+                insert(TagDO.builder()
+                        .name(name)
+                        .build());
+                count++;
+            }
+        }
+        return count;
+    }
+
 }
