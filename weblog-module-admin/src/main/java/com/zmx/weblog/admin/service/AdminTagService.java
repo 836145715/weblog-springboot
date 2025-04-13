@@ -15,4 +15,6 @@ public interface AdminTagService {
     PageResponse findTagPageList(FindTagPageListReqVO findTagPageListReqVO);
 
     Response searchTag(SearchTagReqVO searchTagReqVO);
+
+    Response selectList();
 }

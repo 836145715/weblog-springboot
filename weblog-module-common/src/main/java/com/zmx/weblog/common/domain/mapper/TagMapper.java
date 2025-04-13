@@ -1,6 +1,7 @@
 package com.zmx.weblog.common.domain.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -51,6 +52,10 @@ public interface TagMapper extends BaseMapper<TagDO> {
         // 执行分页查询
         Page<TagDO> pageResult = selectPage(new Page<>(current, pageSize), queryWrapper);
         return pageResult;
+    }
+
+    default List<TagDO> selectList() {
+        return selectList(new QueryWrapper<>());
     }
 
 }

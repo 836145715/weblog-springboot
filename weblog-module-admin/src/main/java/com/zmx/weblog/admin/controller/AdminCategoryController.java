@@ -3,6 +3,7 @@ package com.zmx.weblog.admin.controller;
 import com.zmx.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.zmx.weblog.admin.model.vo.category.DeleteCategoryReqVO;
 import com.zmx.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
+import com.zmx.weblog.admin.model.vo.category.SearchCateReqVO;
 import com.zmx.weblog.admin.service.AdminCategoryService;
 import com.zmx.weblog.common.aspect.ApiOperationLog;
 import com.zmx.weblog.common.utils.PageResponse;
@@ -34,23 +35,29 @@ public class AdminCategoryController {
     @PostMapping("/category/list")
     @ApiOperation(value = "查询分类分页数据")
     @ApiOperationLog(description = "查询分类分页数据")
-    public PageResponse findCategoryList(@RequestBody @Validated FindCategoryPageListReqVO req){
+    public PageResponse findCategoryList(@RequestBody @Validated FindCategoryPageListReqVO req) {
         return categoryService.findCategoryPageList(req);
     }
 
     @PostMapping("/category/delete")
     @ApiOperation(value = "删除分类")
     @ApiOperationLog(description = "删除分类")
-    public Response deleteCategory(@RequestBody @Validated DeleteCategoryReqVO req){
+    public Response deleteCategory(@RequestBody @Validated DeleteCategoryReqVO req) {
         return categoryService.deleteCategory(req);
     }
 
     @PostMapping("/category/select/list")
     @ApiOperation(value = "查询分类下拉列表")
     @ApiOperationLog(description = "查询分类下拉列表")
-    public Response findCategorySelectList(){
-        return categoryService.findCategorySelectList();
+    public Response selectList() {
+        return categoryService.selectList();
     }
 
+    @PostMapping("/category/search")
+    @ApiOperation(value = "搜索分类")
+    @ApiOperationLog(description = "搜索分类")
+    public Response searchSelectList(@RequestBody @Validated SearchCateReqVO req) {
+        return categoryService.searchSelectList(req);
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.zmx.weblog.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,6 +9,8 @@ import com.zmx.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.zmx.weblog.admin.model.vo.category.DeleteCategoryReqVO;
 import com.zmx.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
 import com.zmx.weblog.admin.model.vo.category.FindCategoryPageListRspVO;
+import com.zmx.weblog.admin.model.vo.category.SearchCateReqVO;
+import com.zmx.weblog.admin.model.vo.category.SearchCateRspVO;
 import com.zmx.weblog.admin.service.AdminCategoryService;
 import com.zmx.weblog.common.domain.dos.CategoryDO;
 import com.zmx.weblog.common.domain.mapper.CategoryMapper;
@@ -40,7 +43,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
      */
     @Override
     public Response addCategory(AddCategoryReqVO addCategoryReqVO) {
-		String categoryName = addCategoryReqVO.getName();
+        String categoryName = addCategoryReqVO.getName();
 
         // 先判断该分类是否已经存在
         CategoryDO categoryDO = categoryMapper.selectByName(categoryName);
@@ -63,35 +66,20 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Override
     public PageResponse findCategoryPageList(FindCategoryPageListReqVO req) {
-        //获取当前页 每页显示的记录数
+        // 获取当前页 每页显示的记录数
         long current = req.getCurrent();
         long size = req.getSize();
 
-        // 构建分页对象
-        Page<CategoryDO> page = new Page<>(current, size);
-
-        // 构建查询条件
-        LambdaQueryWrapper<CategoryDO> queryWrapper = new LambdaQueryWrapper<>();
-
-        String name = req.getName();
-        LocalDate startDate = req.getStartDate();
-        LocalDate endDate = req.getEndDate();
-
-        queryWrapper.like(StringUtils.isNotBlank(name), CategoryDO::getName, name.trim())
-                .ge(Objects.nonNull(startDate), CategoryDO::getCreateTime, startDate)
-                .le(Objects.nonNull(endDate), CategoryDO::getCreateTime, endDate)
-                .orderByDesc(CategoryDO::getCreateTime);
-
-        // 执行分页查询
-        Page<CategoryDO> pageResult = categoryMapper.selectPage(page, queryWrapper);
+        Page<CategoryDO> pageResult = categoryMapper.findCategoryPageList(req.getName(), req.getStartDate(),
+                req.getEndDate(), current, size);
 
         List<CategoryDO> categoryDOList = pageResult.getRecords();
-        
-        //DO转为VO
+
+        // DO转为VO
         List<FindCategoryPageListRspVO> vos = null;
-        if(CollectionUtils.isNotEmpty(categoryDOList)){
+        if (CollectionUtils.isNotEmpty(categoryDOList)) {
             vos = categoryDOList.stream()
-                    .map(category->FindCategoryPageListRspVO.builder()
+                    .map(category -> FindCategoryPageListRspVO.builder()
                             .id(category.getId())
                             .name(category.getName())
                             .createTime(category.getCreateTime())
@@ -99,8 +87,7 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
                     .collect(Collectors.toList());
         }
 
-
-        return PageResponse.success(pageResult,vos);
+        return PageResponse.success(pageResult, vos);
     }
 
     @Override
@@ -110,17 +97,33 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     }
 
     @Override
-    public Response findCategorySelectList() {
-        //查询所有分类
-        List<CategoryDO> categoryDOList = categoryMapper.selectList(new LambdaQueryWrapper<>());
+    public Response selectList() {
+        // 查询所有分类
+        List<CategoryDO> categoryDOList = categoryMapper.selectList(new QueryWrapper<>());
         List<SelectRspVO> vos = null;
-        //DO转为VO
-        if(CollectionUtils.isNotEmpty(categoryDOList)){
+        // DO转为VO
+        if (CollectionUtils.isNotEmpty(categoryDOList)) {
             vos = categoryDOList.stream()
-                    .map(category->SelectRspVO.builder()
+                    .map(category -> SelectRspVO.builder()
                             .label(category.getName())
                             .value(category.getId()).build())
-                            .collect(Collectors.toList());
+                    .collect(Collectors.toList());
+        }
+        return Response.success(vos);
+    }
+
+    @Override
+    public Response searchSelectList(SearchCateReqVO searchCateReqVO) {
+        String keyword = searchCateReqVO.getKeyword();
+        List<CategoryDO> categoryDOList = categoryMapper.searchByKey(keyword);
+        List<SearchCateRspVO> vos = null;
+        if (CollectionUtils.isNotEmpty(categoryDOList)) {
+            vos = categoryDOList.stream()
+                    .map(category -> SearchCateRspVO.builder()
+                            .name(category.getName())
+                            .createTime(category.getCreateTime())
+                            .build())
+                    .collect(Collectors.toList());
         }
         return Response.success(vos);
     }

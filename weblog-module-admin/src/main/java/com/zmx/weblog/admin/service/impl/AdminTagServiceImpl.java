@@ -1,5 +1,6 @@
 package com.zmx.weblog.admin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zmx.weblog.admin.model.vo.tag.*;
@@ -8,6 +9,7 @@ import com.zmx.weblog.common.domain.dos.TagDO;
 import com.zmx.weblog.common.domain.mapper.TagMapper;
 import com.zmx.weblog.common.enums.ResponseCodeEnum;
 import com.zmx.weblog.common.exception.BizException;
+import com.zmx.weblog.common.model.vo.SelectRspVO;
 import com.zmx.weblog.common.utils.PageResponse;
 import com.zmx.weblog.common.utils.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -78,8 +80,6 @@ public class AdminTagServiceImpl implements AdminTagService {
                     .collect(Collectors.toList());
         }
 
-        System.out.println("vos: " + vos);
-
         // 返回分页数据
         return PageResponse.success(pageResult, vos);
     }
@@ -96,6 +96,21 @@ public class AdminTagServiceImpl implements AdminTagService {
                         .build())
                 .collect(Collectors.toList());
 
+        return Response.success(vos);
+    }
+
+    @Override
+    public Response selectList() {
+        List<TagDO> tagDOList = tagMapper.selectList(new QueryWrapper<>());
+        List<SelectRspVO> vos = null;
+        if (CollectionUtils.isNotEmpty(tagDOList)) {
+            vos = tagDOList.stream()
+                    .map(tag -> SelectRspVO.builder()
+                            .label(tag.getName())
+                            .value(tag.getId())
+                            .build())
+                    .collect(Collectors.toList());
+        }
         return Response.success(vos);
     }
 
