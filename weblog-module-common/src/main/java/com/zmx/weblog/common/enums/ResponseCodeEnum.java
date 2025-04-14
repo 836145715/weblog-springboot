@@ -25,6 +25,8 @@ public enum ResponseCodeEnum {
 
     TAG_NAME_IS_EXISTED("20006", "标签名称已存在！"),
 
+    FILE_UPLOAD_FAILED("20008", "文件上传失败！"),
+
     ;
 
     // 异常码
