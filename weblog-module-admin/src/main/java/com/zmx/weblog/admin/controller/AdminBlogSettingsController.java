@@ -18,14 +18,14 @@ public class AdminBlogSettingsController {
     @Autowired
     private AdminBlogSettingsService blogSettingsService;
 
-    @PostMapping("/blog-settings/update")
+    @PostMapping("/blog/settings/update")
     @ApiOperation(value = "更新博客设置")
     @ApiOperationLog(description = "更新博客设置")
     public Response updateBlogSettings(@RequestBody @Validated UpdateBlogSettingsReqVO updateBlogSettingsReqVO) {
         return blogSettingsService.updateBlogSettings(updateBlogSettingsReqVO);
     }
 
-    @GetMapping("/blog-settings/detail")
+    @GetMapping("/blog/settings/detail")
     @ApiOperation(value = "获取博客设置详情")
     @ApiOperationLog(description = "获取博客设置详情")
     public Response getBlogSettingsDetail() {
