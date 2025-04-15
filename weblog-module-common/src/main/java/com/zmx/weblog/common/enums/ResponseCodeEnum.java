@@ -27,6 +27,8 @@ public enum ResponseCodeEnum {
 
     FILE_UPLOAD_FAILED("20008", "文件上传失败！"),
 
+    CATEGORY_NOT_FOUND("20009", "分类不存在！"),
+
     ;
 
     // 异常码

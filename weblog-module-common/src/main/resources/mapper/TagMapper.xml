@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmx.weblog.common.domain.mapper.TagMapper">
+    
+    <!-- 批量插入标签（已存在的不插入），通过一条SQL实现 -->
+    <!-- 注意：需要在TagDO.name上有唯一约束 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT IGNORE INTO t_tag (name) VALUES
+        <foreach collection="names" item="name" separator=",">
+            (#{name})
+        </foreach>
+    </insert>
+    
+</mapper> 

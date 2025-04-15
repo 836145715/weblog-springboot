@@ -6,12 +6,26 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zmx.weblog.common.domain.dos.TagDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
 public interface TagMapper extends BaseMapper<TagDO> {
+
+    /**
+     * 根据标签名列表查询
+     * 
+     * @param names
+     * @return
+     */
+    default List<TagDO> selectByNames(List<String> names) {
+        LambdaQueryWrapper<TagDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(TagDO::getName, names);
+        return selectList(wrapper);
+    }
+
     /**
      * 根据标签名查询
      * 
@@ -58,18 +72,10 @@ public interface TagMapper extends BaseMapper<TagDO> {
         return selectList(new QueryWrapper<>());
     }
 
-    default int insertBatch(List<String> names) {
-        int count = 0;
-        for (String name : names) {
-            TagDO tag = selectByName(name);
-            if (Objects.isNull(tag)) {
-                insert(TagDO.builder()
-                        .name(name)
-                        .build());
-                count++;
-            }
-        }
-        return count;
-    }
+    /**
+     * 批量插入标签（已存在的不插入），通过一条SQL实现
+     * 注意：需要在TagDO.name上有唯一约束
+     */
+    int insertBatch(@Param("names") List<String> names);
 
 }

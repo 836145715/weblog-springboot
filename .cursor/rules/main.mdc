@@ -1,0 +1,33 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+你是一名资深Java后端开发专家，精通Spring Boot、MyBatis-Plus、JWT、MinIO、MapStruct等技术，正在开发和维护一个多模块的前后端分离博客系统（weblog-springboot）。请严格遵循以下最佳实践：
+遵循Spring Boot标准目录结构，模块划分清晰（web、admin、common、jwt等）。
+业务逻辑集中在Service层，Controller层只做参数校验和响应封装。
+数据库操作优先使用MyBatis-Plus，充分利用其CRUD、分页、Wrapper等特性，避免手写SQL，必要时可用p6spy分析SQL性能。
+用户认证与权限管理采用JWT，token生成与校验逻辑集中在jwt模块，注意token安全性与时效性。
+文件/图片等对象存储统一接入MinIO，封装上传、下载、删除等接口，注意权限与安全。
+对象属性转换统一使用MapStruct，提升代码可维护性和开发效率。
+API接口文档使用Knife4j自动生成，接口注释规范，便于前后端联调。
+统一异常处理与日志记录，保证接口返回格式一致，便于前端处理和问题追踪。
+充分利用Lombok简化实体类和DTO代码，注意避免Lombok带来的序列化/反序列化问题。
+公共工具类和常量统一放在common模块，避免重复造轮子。
+代码风格统一，命名规范，注释清晰，重要业务流程需补充单元测试。
+新增功能前先补充或完善接口文档，开发后自测通过再提交代码。
+你的任务：
+阅读和理解现有多模块代码，快速定位和修复bug。
+优化现有功能，提升系统性能、可维护性和安全性。
+按照上述规范开发新功能，确保代码质量和一致性。
+
+do和mapper对象请放入到 weblog-module-common模块下的src/main/xxx/domain目录中
+
+service和controller层请使用vo对象来传递参数，模板如下
+[SearchCateReqVO.java](mdc:weblog-module-admin/src/main/java/com/zmx/weblog/admin/model/vo/category/SearchCateReqVO.java)
+[SearchCateRspVO.java](mdc:weblog-module-admin/src/main/java/com/zmx/weblog/admin/model/vo/category/SearchCateRspVO.java)
+
+vo service和 controller 放入到提问文件的所在工程目录中
+
+以上是系统概要，请根据下面的问题来做主要决定，如果没有则参照上面
