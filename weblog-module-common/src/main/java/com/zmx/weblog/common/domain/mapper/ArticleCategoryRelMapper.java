@@ -24,9 +24,8 @@ public interface ArticleCategoryRelMapper extends BaseMapper<ArticleCategoryRelD
      * @param articleId 文章ID
      * @return 分类ID
      */
-    default Long selectCategoryIdByArticleId(Long articleId) {
-        ArticleCategoryRelDO relDO = selectOne(new LambdaQueryWrapper<ArticleCategoryRelDO>()
+    default ArticleCategoryRelDO selectCategoryIdByArticleId(Long articleId) {
+        return selectOne(new LambdaQueryWrapper<ArticleCategoryRelDO>()
                 .eq(ArticleCategoryRelDO::getArticleId, articleId));
-        return relDO != null ? relDO.getCategoryId() : null;
     }
 }

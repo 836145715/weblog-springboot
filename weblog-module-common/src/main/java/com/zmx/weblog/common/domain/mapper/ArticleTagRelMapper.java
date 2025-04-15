@@ -30,11 +30,9 @@ public interface ArticleTagRelMapper extends BaseMapper<ArticleTagRelDO> {
      * @param articleId 文章ID
      * @return 标签ID列表
      */
-    default List<Long> selectTagIdsByArticleId(Long articleId) {
+    default List<ArticleTagRelDO> selectByArticleId(Long articleId) {
         return selectList(
                 new LambdaQueryWrapper<ArticleTagRelDO>()
-                        .eq(ArticleTagRelDO::getArticleId, articleId))
-                .stream().map(ArticleTagRelDO::getTagId)
-                .collect(Collectors.toList());
+                        .eq(ArticleTagRelDO::getArticleId, articleId));
     }
 }

@@ -3,8 +3,9 @@ package com.zmx.weblog.admin.service.impl;
 import com.zmx.weblog.admin.model.vo.article.PublishArticleReqVO;
 import com.zmx.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.zmx.weblog.admin.model.vo.article.FindArticlePageListRspVO;
+import com.zmx.weblog.admin.convert.ArticleDetailConvert;
 import com.zmx.weblog.admin.model.vo.article.ArticleDetailRspVO;
-import com.zmx.weblog.admin.service.ArticleService;
+import com.zmx.weblog.admin.service.AdminArticleService;
 import com.zmx.weblog.common.domain.dos.*;
 import com.zmx.weblog.common.domain.mapper.*;
 import com.zmx.weblog.common.enums.ResponseCodeEnum;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class ArticleServiceImpl implements ArticleService {
+public class AdminArticleServiceImpl implements AdminArticleService {
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -168,27 +169,28 @@ public class ArticleServiceImpl implements ArticleService {
         // 查询主表
         ArticleDO article = articleMapper.selectById(articleId);
         if (article == null) {
-            return Response.fail(ResponseCodeEnum.ARTICLE_NOT_FOUND);
+            log.error("文章不存在，articleId: {}", articleId);
+            throw new BizException(ResponseCodeEnum.ARTICLE_NOT_FOUND);
         }
 
         // 查询内容
-        String content = articleContentMapper.selectContentByArticleId(articleId);
+        ArticleContentDO content = articleContentMapper.selectContentByArticleId(articleId);
 
         // 查询分类
-        Long categoryId = articleCategoryRelMapper.selectCategoryIdByArticleId(articleId);
+        ArticleCategoryRelDO categoryRel = articleCategoryRelMapper.selectCategoryIdByArticleId(articleId);
+        Long categoryId = categoryRel != null ? categoryRel.getCategoryId() : null;
+
+        // 对应标签
+        List<ArticleTagRelDO> articleTagRelDOS = articleTagRelMapper.selectByArticleId(articleId);
 
         // 查询标签
-        List<Long> tagIds = articleTagRelMapper.selectTagIdsByArticleId(articleId);
+        List<Long> tagIds = articleTagRelDOS.stream().map(ArticleTagRelDO::getTagId).collect(Collectors.toList());
 
-        ArticleDetailRspVO rspVO = ArticleDetailRspVO.builder()
-                .id(article.getId())
-                .title(article.getTitle())
-                .cover(article.getCover())
-                .summary(article.getSummary())
-                .content(content)
-                .categoryId(categoryId)
-                .tagIds(tagIds)
-                .build();
+        // do转vo
+        ArticleDetailRspVO rspVO = ArticleDetailConvert.INSTANCE.convertDO2VO(article);
+        rspVO.setContent(content.getContent());
+        rspVO.setCategoryId(categoryId);
+        rspVO.setTagIds(tagIds);
 
         return Response.success(rspVO);
     }

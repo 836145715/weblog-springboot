@@ -5,7 +5,7 @@ import com.zmx.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.zmx.weblog.common.utils.Response;
 import com.zmx.weblog.common.utils.PageResponse;
 
-public interface ArticleService {
+public interface AdminArticleService {
     /**
      * 发布文章
      * 

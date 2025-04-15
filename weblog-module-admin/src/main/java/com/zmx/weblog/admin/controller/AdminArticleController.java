@@ -3,7 +3,7 @@ package com.zmx.weblog.admin.controller;
 import com.zmx.weblog.admin.model.vo.article.PublishArticleReqVO;
 import com.zmx.weblog.admin.model.vo.article.DeleteArticleReqVO;
 import com.zmx.weblog.admin.model.vo.article.FindArticlePageListReqVO;
-import com.zmx.weblog.admin.service.ArticleService;
+import com.zmx.weblog.admin.service.AdminArticleService;
 import com.zmx.weblog.common.utils.Response;
 import com.zmx.weblog.common.utils.PageResponse;
 
@@ -26,7 +26,7 @@ import javax.validation.Valid;
 public class AdminArticleController {
 
     @Autowired
-    private ArticleService articleService;
+    private AdminArticleService articleService;
 
     @PostMapping("/publish")
     @ApiOperation("发布文章")
