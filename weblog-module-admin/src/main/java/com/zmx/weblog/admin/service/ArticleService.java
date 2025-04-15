@@ -29,4 +29,12 @@ public interface ArticleService {
      * @return 分页结果
      */
     PageResponse findArticlePageList(FindArticlePageListReqVO reqVO);
+
+    /**
+     * 查询文章详情
+     * 
+     * @param articleId 文章ID
+     * @return 文章详情
+     */
+    Response getArticleDetail(Long articleId);
 }

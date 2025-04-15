@@ -17,4 +17,16 @@ public interface ArticleCategoryRelMapper extends BaseMapper<ArticleCategoryRelD
         return delete(new LambdaQueryWrapper<ArticleCategoryRelDO>()
                 .eq(ArticleCategoryRelDO::getArticleId, articleId));
     }
+
+    /**
+     * 根据文章ID查找分类ID
+     * 
+     * @param articleId 文章ID
+     * @return 分类ID
+     */
+    default Long selectCategoryIdByArticleId(Long articleId) {
+        ArticleCategoryRelDO relDO = selectOne(new LambdaQueryWrapper<ArticleCategoryRelDO>()
+                .eq(ArticleCategoryRelDO::getArticleId, articleId));
+        return relDO != null ? relDO.getCategoryId() : null;
+    }
 }

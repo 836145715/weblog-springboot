@@ -45,4 +45,10 @@ public class AdminArticleController {
     public PageResponse findArticlePageList(@RequestBody @Validated FindArticlePageListReqVO req) {
         return articleService.findArticlePageList(req);
     }
+
+    @PostMapping("/detail")
+    @ApiOperation("查询文章详情")
+    public Response getArticleDetail(@RequestBody @Validated DeleteArticleReqVO reqVO) {
+        return articleService.getArticleDetail(reqVO.getArticleId());
+    }
 }

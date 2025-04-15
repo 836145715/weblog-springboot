@@ -3,6 +3,7 @@ package com.zmx.weblog.admin.service.impl;
 import com.zmx.weblog.admin.model.vo.article.PublishArticleReqVO;
 import com.zmx.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.zmx.weblog.admin.model.vo.article.FindArticlePageListRspVO;
+import com.zmx.weblog.admin.model.vo.article.ArticleDetailRspVO;
 import com.zmx.weblog.admin.service.ArticleService;
 import com.zmx.weblog.common.domain.dos.*;
 import com.zmx.weblog.common.domain.mapper.*;
@@ -160,6 +161,36 @@ public class ArticleServiceImpl implements ArticleService {
                     .collect(Collectors.toList());
         }
         return PageResponse.success(pageResult, vos);
+    }
+
+    @Override
+    public Response getArticleDetail(Long articleId) {
+        // 查询主表
+        ArticleDO article = articleMapper.selectById(articleId);
+        if (article == null) {
+            return Response.fail(ResponseCodeEnum.ARTICLE_NOT_FOUND);
+        }
+
+        // 查询内容
+        String content = articleContentMapper.selectContentByArticleId(articleId);
+
+        // 查询分类
+        Long categoryId = articleCategoryRelMapper.selectCategoryIdByArticleId(articleId);
+
+        // 查询标签
+        List<Long> tagIds = articleTagRelMapper.selectTagIdsByArticleId(articleId);
+
+        ArticleDetailRspVO rspVO = ArticleDetailRspVO.builder()
+                .id(article.getId())
+                .title(article.getTitle())
+                .cover(article.getCover())
+                .summary(article.getSummary())
+                .content(content)
+                .categoryId(categoryId)
+                .tagIds(tagIds)
+                .build();
+
+        return Response.success(rspVO);
     }
 
 }
