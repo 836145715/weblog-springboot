@@ -1,5 +1,6 @@
 package com.zmx.weblog.admin.model.vo.blogsettings;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ApiModel("博客设置响应VO")
 public class BlogSettingsRspVO {
 
     private String logo;
