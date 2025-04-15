@@ -1,6 +1,7 @@
 package com.zmx.weblog.admin.controller;
 
 import com.zmx.weblog.admin.model.vo.article.PublishArticleReqVO;
+import com.zmx.weblog.admin.model.vo.article.DeleteArticleReqVO;
 import com.zmx.weblog.admin.service.ArticleService;
 import com.zmx.weblog.common.utils.Response;
 
@@ -17,10 +18,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/admin/article")
-@Api(tags = "文章管理")
+@Api(tags = "Admin 文章管理")
 
 @Validated
-public class ArticleController {
+public class AdminArticleController {
 
     @Autowired
     private ArticleService articleService;
@@ -29,5 +30,11 @@ public class ArticleController {
     @ApiOperation("发布文章")
     public Response publishArticle(@Valid @RequestBody PublishArticleReqVO reqVO) {
         return articleService.publishArticle(reqVO);
+    }
+
+    @PostMapping("/delete")
+    @ApiOperation("删除文章")
+    public Response deleteArticle(@RequestBody DeleteArticleReqVO reqVO) {
+        return articleService.deleteArticle(reqVO.getArticleId());
     }
 }

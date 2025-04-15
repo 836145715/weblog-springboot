@@ -112,4 +112,26 @@ public class ArticleServiceImpl implements ArticleService {
         return Response.success(article.getId());
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response deleteArticle(Long articleId) {
+        // 1. 删除主表
+        ArticleDO article = articleMapper.selectById(articleId);
+        if (article == null) {
+            return Response.fail(ResponseCodeEnum.ARTICLE_NOT_FOUND);
+        }
+        articleMapper.deleteById(articleId);
+
+        // 2. 删除内容表
+        articleContentMapper.deleteByArticleId(articleId);
+
+        // 3. 删除分类关联
+        articleCategoryRelMapper.deleteByArticleId(articleId);
+
+        // 4. 删除标签关联
+        articleTagRelMapper.deleteByArticleId(articleId);
+
+        return Response.success();
+    }
+
 }

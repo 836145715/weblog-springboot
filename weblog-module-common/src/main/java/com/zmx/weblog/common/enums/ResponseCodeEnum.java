@@ -29,6 +29,8 @@ public enum ResponseCodeEnum {
 
     CATEGORY_NOT_FOUND("20009", "分类不存在！"),
 
+    ARTICLE_NOT_FOUND("20010", "文章不存在！"),
+
     ;
 
     // 异常码

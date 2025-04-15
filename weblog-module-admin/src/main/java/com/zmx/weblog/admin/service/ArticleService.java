@@ -11,4 +11,12 @@ public interface ArticleService {
      * @return 发布结果
      */
     Response publishArticle(PublishArticleReqVO reqVO);
+
+    /**
+     * 删除文章
+     * 
+     * @param articleId 文章ID
+     * @return 操作结果
+     */
+    Response deleteArticle(Long articleId);
 }
