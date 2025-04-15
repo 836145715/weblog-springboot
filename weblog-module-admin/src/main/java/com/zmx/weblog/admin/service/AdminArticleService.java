@@ -1,6 +1,7 @@
 package com.zmx.weblog.admin.service;
 
 import com.zmx.weblog.admin.model.vo.article.PublishArticleReqVO;
+import com.zmx.weblog.admin.model.vo.article.UpdateArticleReqVO;
 import com.zmx.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.zmx.weblog.common.utils.Response;
 import com.zmx.weblog.common.utils.PageResponse;
@@ -37,4 +38,12 @@ public interface AdminArticleService {
      * @return 文章详情
      */
     Response getArticleDetail(Long articleId);
+
+    /**
+     * 更新文章
+     * 
+     * @param reqVO 更新请求参数
+     * @return 更新结果
+     */
+    Response updateArticle(UpdateArticleReqVO reqVO);
 }
