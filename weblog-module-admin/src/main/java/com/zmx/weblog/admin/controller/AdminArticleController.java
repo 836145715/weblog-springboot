@@ -2,8 +2,10 @@ package com.zmx.weblog.admin.controller;
 
 import com.zmx.weblog.admin.model.vo.article.PublishArticleReqVO;
 import com.zmx.weblog.admin.model.vo.article.DeleteArticleReqVO;
+import com.zmx.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.zmx.weblog.admin.service.ArticleService;
 import com.zmx.weblog.common.utils.Response;
+import com.zmx.weblog.common.utils.PageResponse;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,5 +38,11 @@ public class AdminArticleController {
     @ApiOperation("删除文章")
     public Response deleteArticle(@RequestBody DeleteArticleReqVO reqVO) {
         return articleService.deleteArticle(reqVO.getArticleId());
+    }
+
+    @PostMapping("/list")
+    @ApiOperation("查询文章分页数据")
+    public PageResponse findArticlePageList(@RequestBody @Validated FindArticlePageListReqVO req) {
+        return articleService.findArticlePageList(req);
     }
 }

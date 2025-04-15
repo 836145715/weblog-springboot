@@ -1,7 +1,9 @@
 package com.zmx.weblog.admin.service;
 
 import com.zmx.weblog.admin.model.vo.article.PublishArticleReqVO;
+import com.zmx.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.zmx.weblog.common.utils.Response;
+import com.zmx.weblog.common.utils.PageResponse;
 
 public interface ArticleService {
     /**
@@ -19,4 +21,12 @@ public interface ArticleService {
      * @return 操作结果
      */
     Response deleteArticle(Long articleId);
+
+    /**
+     * 文章分页查询
+     * 
+     * @param reqVO 分页查询参数
+     * @return 分页结果
+     */
+    PageResponse findArticlePageList(FindArticlePageListReqVO reqVO);
 }

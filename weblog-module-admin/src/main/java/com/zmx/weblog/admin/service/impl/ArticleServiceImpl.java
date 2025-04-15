@@ -1,17 +1,23 @@
 package com.zmx.weblog.admin.service.impl;
 
 import com.zmx.weblog.admin.model.vo.article.PublishArticleReqVO;
+import com.zmx.weblog.admin.model.vo.article.FindArticlePageListReqVO;
+import com.zmx.weblog.admin.model.vo.article.FindArticlePageListRspVO;
 import com.zmx.weblog.admin.service.ArticleService;
 import com.zmx.weblog.common.domain.dos.*;
 import com.zmx.weblog.common.domain.mapper.*;
 import com.zmx.weblog.common.enums.ResponseCodeEnum;
 import com.zmx.weblog.common.exception.BizException;
 import com.zmx.weblog.common.utils.Response;
+import com.zmx.weblog.common.utils.PageResponse;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,6 +138,28 @@ public class ArticleServiceImpl implements ArticleService {
         articleTagRelMapper.deleteByArticleId(articleId);
 
         return Response.success();
+    }
+
+    @Override
+    public PageResponse findArticlePageList(FindArticlePageListReqVO reqVO) {
+        String title = reqVO.getTitle();
+        LocalDate startDate = reqVO.getStartDate();
+        LocalDate endDate = reqVO.getEndDate();
+        Page<ArticleDO> pageResult = articleMapper.findArticlePageList(title, startDate, endDate, reqVO.getCurrent(),
+                reqVO.getSize());
+        List<FindArticlePageListRspVO> vos = null;
+        if (CollectionUtils.isNotEmpty(pageResult.getRecords())) {
+            vos = pageResult.getRecords().stream()
+                    .map(article -> FindArticlePageListRspVO.builder()
+                            .id(article.getId())
+                            .title(article.getTitle())
+                            .cover(article.getCover())
+                            .summary(article.getSummary())
+                            .createTime(article.getCreateTime())
+                            .build())
+                    .collect(Collectors.toList());
+        }
+        return PageResponse.success(pageResult, vos);
     }
 
 }
