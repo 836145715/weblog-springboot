@@ -12,7 +12,9 @@ import com.zmx.weblog.admin.model.vo.category.FindCategoryPageListRspVO;
 import com.zmx.weblog.admin.model.vo.category.SearchCateReqVO;
 import com.zmx.weblog.admin.model.vo.category.SearchCateRspVO;
 import com.zmx.weblog.admin.service.AdminCategoryService;
+import com.zmx.weblog.common.domain.dos.ArticleCategoryRelDO;
 import com.zmx.weblog.common.domain.dos.CategoryDO;
+import com.zmx.weblog.common.domain.mapper.ArticleCategoryRelMapper;
 import com.zmx.weblog.common.domain.mapper.CategoryMapper;
 import com.zmx.weblog.common.enums.ResponseCodeEnum;
 import com.zmx.weblog.common.exception.BizException;
@@ -34,6 +36,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Autowired
+    private ArticleCategoryRelMapper articleCategoryRelMapper;
 
     /**
      * 添加分类
@@ -92,6 +97,12 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Override
     public Response deleteCategory(DeleteCategoryReqVO reqVO) {
+        // 先判断分类是否有人使用
+        ArticleCategoryRelDO articleCategoryRelDO = articleCategoryRelMapper.selectOneByCategoryId(reqVO.getId());
+        if (Objects.nonNull(articleCategoryRelDO)) {
+            log.warn("分类ID： {}, 分类已被使用", reqVO.getId());
+            throw new BizException(ResponseCodeEnum.CATEGORY_IS_USED);
+        }
         categoryMapper.deleteById(reqVO.getId());
         return Response.success();
     }

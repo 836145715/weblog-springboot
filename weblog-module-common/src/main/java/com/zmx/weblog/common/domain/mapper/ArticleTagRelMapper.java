@@ -35,4 +35,16 @@ public interface ArticleTagRelMapper extends BaseMapper<ArticleTagRelDO> {
                 new LambdaQueryWrapper<ArticleTagRelDO>()
                         .eq(ArticleTagRelDO::getArticleId, articleId));
     }
+
+    /**
+     * 根据标签ID查找一个标签关联
+     * 
+     * @param tagId 标签ID
+     * @return 标签关联
+     */
+    default ArticleTagRelDO selectOneByTagId(Long tagId) {
+        return selectOne(
+                new LambdaQueryWrapper<ArticleTagRelDO>()
+                        .eq(ArticleTagRelDO::getTagId, tagId).last("limit 1"));
+    }
 }

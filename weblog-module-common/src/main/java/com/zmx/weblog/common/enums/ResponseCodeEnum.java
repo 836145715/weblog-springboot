@@ -31,6 +31,10 @@ public enum ResponseCodeEnum {
 
     ARTICLE_NOT_FOUND("20010", "文章不存在！"),
 
+    CATEGORY_IS_USED("20011", "该分类下包含文章，请先删除对应文章，才能删除！"),
+
+    TAG_IS_USED("20012", "该标签下包含文章，请先删除对应文章，才能删除！"),
+
     ;
 
     // 异常码

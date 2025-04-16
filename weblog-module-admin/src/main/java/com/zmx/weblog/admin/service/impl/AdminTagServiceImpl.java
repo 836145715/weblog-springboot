@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zmx.weblog.admin.model.vo.tag.*;
 import com.zmx.weblog.admin.service.AdminTagService;
+import com.zmx.weblog.common.domain.dos.ArticleTagRelDO;
 import com.zmx.weblog.common.domain.dos.TagDO;
+import com.zmx.weblog.common.domain.mapper.ArticleTagRelMapper;
 import com.zmx.weblog.common.domain.mapper.TagMapper;
 import com.zmx.weblog.common.enums.ResponseCodeEnum;
 import com.zmx.weblog.common.exception.BizException;
@@ -27,6 +29,8 @@ public class AdminTagServiceImpl implements AdminTagService {
 
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private ArticleTagRelMapper articleTagRelMapper;
 
     @Override
     public Response addTag(AddTagReqVO addTagReqVO) {
@@ -53,6 +57,12 @@ public class AdminTagServiceImpl implements AdminTagService {
 
     @Override
     public Response deleteTag(DeleteTagReqVO deleteTagReqVO) {
+        // 先判断标签是否有人使用
+        ArticleTagRelDO articleTagRelDO = articleTagRelMapper.selectOneByTagId(deleteTagReqVO.getId());
+        if (Objects.nonNull(articleTagRelDO)) {
+            log.warn("标签ID： {}, 标签已被使用", deleteTagReqVO.getId());
+            throw new BizException(ResponseCodeEnum.TAG_IS_USED);
+        }
         tagMapper.deleteById(deleteTagReqVO.getId());
         return Response.success();
     }
