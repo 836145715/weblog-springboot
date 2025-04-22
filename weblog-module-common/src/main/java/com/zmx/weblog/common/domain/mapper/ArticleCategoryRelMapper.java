@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zmx.weblog.common.domain.dos.ArticleCategoryRelDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface ArticleCategoryRelMapper extends BaseMapper<ArticleCategoryRelDO> {
     /**
@@ -24,9 +26,14 @@ public interface ArticleCategoryRelMapper extends BaseMapper<ArticleCategoryRelD
      * @param articleId 文章ID
      * @return 分类ID
      */
-    default ArticleCategoryRelDO selectCategoryIdByArticleId(Long articleId) {
+    default ArticleCategoryRelDO selectByArticleId(Long articleId) {
         return selectOne(new LambdaQueryWrapper<ArticleCategoryRelDO>()
                 .eq(ArticleCategoryRelDO::getArticleId, articleId));
+    }
+
+    default List<ArticleCategoryRelDO> selectByArticleIds(List<Long> articleIds) {
+        return selectList(new LambdaQueryWrapper<ArticleCategoryRelDO>()
+                .in(ArticleCategoryRelDO::getArticleId, articleIds));
     }
 
     /**

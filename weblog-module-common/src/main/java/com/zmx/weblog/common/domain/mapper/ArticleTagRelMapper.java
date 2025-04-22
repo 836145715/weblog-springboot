@@ -37,6 +37,20 @@ public interface ArticleTagRelMapper extends BaseMapper<ArticleTagRelDO> {
     }
 
     /**
+     * 根据文章ID列表查找所有标签ID
+     *
+     * @param articleIds 文章ID列表
+     * @return 标签ID列表
+     */
+    default List<ArticleTagRelDO> selectByArticleIds(List<Long> articleIds) {
+        return selectList(
+                new LambdaQueryWrapper<ArticleTagRelDO>()
+                        .in(ArticleTagRelDO::getArticleId, articleIds));
+    }
+
+    
+
+    /**
      * 根据标签ID查找一个标签关联
      * 
      * @param tagId 标签ID

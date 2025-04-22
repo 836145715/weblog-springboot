@@ -1,4 +1,4 @@
-package com.zmx.weblog.web.model.vo.tag;
+package com.zmx.weblog.web.model.vo.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FindTagListRspVO {
+public class FindCategoryListRspVO {
     private Long id;
     private String name;
 }

@@ -22,16 +22,16 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
      * @param pageSize  每页大小
      * @return 分页结果
      */
-    default Page<ArticleDO> findArticlePageList(
+    default Page<ArticleDO> selectPageList(
             String title, LocalDate startDate, LocalDate endDate, long current, long pageSize) {
         LambdaQueryWrapper<ArticleDO> queryWrapper = new LambdaQueryWrapper<>();
+        Page page = new Page<>(current, pageSize);
+
         queryWrapper
-                .like(StringUtils.isNotBlank(title),
-                        ArticleDO::getTitle, title)
+                .like(StringUtils.isNotBlank(title),ArticleDO::getTitle, title)
                 .ge(startDate != null, ArticleDO::getCreateTime, startDate)
                 .le(endDate != null, ArticleDO::getCreateTime, endDate)
                 .orderByDesc(ArticleDO::getCreateTime);
-        return selectPage(new Page<>(current, pageSize),
-                queryWrapper);
+        return selectPage(page,queryWrapper);
     }
 }

@@ -1,12 +1,14 @@
-package com.zmx.weblog.web.model.vo.category;
+package com.zmx.weblog.web.model.vo.article;
 
 import com.zmx.weblog.common.model.BasePageQuery;
+
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-@ApiModel(value = "首页查询文章分页 VO")
+@ApiModel(description = "查询首页文章分页列表请求参数")
 public class FindIndexArticlePageListReqVO extends BasePageQuery {
+
 }

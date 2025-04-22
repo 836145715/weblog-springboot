@@ -114,7 +114,7 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         String title = reqVO.getTitle();
         LocalDate startDate = reqVO.getStartDate();
         LocalDate endDate = reqVO.getEndDate();
-        Page<ArticleDO> pageResult = articleMapper.findArticlePageList(title, startDate, endDate, reqVO.getCurrent(),
+        Page<ArticleDO> pageResult = articleMapper.selectPageList(title, startDate, endDate, reqVO.getCurrent(),
                 reqVO.getSize());
         List<FindArticlePageListRspVO> vos = null;
         if (CollectionUtils.isNotEmpty(pageResult.getRecords())) {
@@ -144,7 +144,7 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         ArticleContentDO content = articleContentMapper.selectContentByArticleId(articleId);
 
         // 查询分类
-        ArticleCategoryRelDO categoryRel = articleCategoryRelMapper.selectCategoryIdByArticleId(articleId);
+        ArticleCategoryRelDO categoryRel = articleCategoryRelMapper.selectByArticleId(articleId);
         Long categoryId = categoryRel != null ? categoryRel.getCategoryId() : null;
 
         // 对应标签
