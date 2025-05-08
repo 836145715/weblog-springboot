@@ -1,10 +1,9 @@
 package com.zmx.weblog.jwt.utils;
 
-import com.zmx.weblog.jwt.config.JwtProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Component;
@@ -18,12 +17,10 @@ import java.util.Base64;
 @Component
 public class JwtTokenHelper implements InitializingBean {
 
-    @Autowired
-    private JwtProperties jwtProperties;
-
     /**
      * 签发人
      */
+    @Value("${jwt.issuer}")
     private String issuer;
     /**
      * 秘钥
@@ -37,8 +34,11 @@ public class JwtTokenHelper implements InitializingBean {
 
     /**
      * 解码配置文件中配置的 Base 64 编码 key 为秘钥
+     * 
+     * @param base64Key
      */
-    private void setBase64Key(String base64Key) {
+    @Value("${jwt.secret}")
+    public void setBase64Key(String base64Key) {
         key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(base64Key));
     }
 
@@ -49,15 +49,17 @@ public class JwtTokenHelper implements InitializingBean {
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-        // 从JwtProperties获取配置
-        this.issuer = jwtProperties.getIssuer();
-        setBase64Key(jwtProperties.getSecret());
-
         // 考虑到不同服务器之间可能存在时钟偏移，setAllowedClockSkewSeconds 用于设置能够容忍的最大的时钟误差
         jwtParser = Jwts.parserBuilder().requireIssuer(issuer)
                 .setSigningKey(key).setAllowedClockSkewSeconds(10)
                 .build();
     }
+
+    /**
+     * Token 失效时间（分钟）
+     */
+    @Value("${jwt.tokenExpireTime}")
+    private Long tokenExpireTime;
 
     /**
      * 生成 Token
@@ -68,7 +70,7 @@ public class JwtTokenHelper implements InitializingBean {
     public String generateToken(String username) {
         LocalDateTime now = LocalDateTime.now();
         // Token 一个小时后失效
-        LocalDateTime expireTime = now.plusHours(jwtProperties.getTokenExpireTime() / 60);
+        LocalDateTime expireTime = now.plusHours(tokenExpireTime);
 
         return Jwts.builder().setSubject(username)
                 .setIssuer(issuer)
