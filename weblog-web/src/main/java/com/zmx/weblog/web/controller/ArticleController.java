@@ -24,7 +24,6 @@ public class ArticleController {
     public Response findArticlePageList(@RequestBody FindIndexArticlePageListReqVO findIndexArticlePageListReqVO) {
         return articleService.findArticlePageList(findIndexArticlePageListReqVO);
     }
-    
 
 
 }

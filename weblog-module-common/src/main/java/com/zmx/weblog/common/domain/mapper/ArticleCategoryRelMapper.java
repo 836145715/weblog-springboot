@@ -2,6 +2,7 @@ package com.zmx.weblog.common.domain.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.zmx.weblog.common.domain.dos.ArticleCategoryRelDO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -48,6 +49,17 @@ public interface ArticleCategoryRelMapper extends BaseMapper<ArticleCategoryRelD
         return selectOne(
                 new LambdaQueryWrapper<ArticleCategoryRelDO>()
                         .eq(ArticleCategoryRelDO::getCategoryId, categoryId).last("limit 1"));
+    }
+
+
+    /**
+     * 根据分类 ID 查询所有的关联记录
+     * @param categoryId
+     * @return
+     */
+    default List<ArticleCategoryRelDO> selectListByCategoryId(Long categoryId) {
+        return selectList(Wrappers.<ArticleCategoryRelDO>lambdaQuery()
+                .eq(ArticleCategoryRelDO::getCategoryId, categoryId));
     }
 
 }
