@@ -13,6 +13,7 @@ import com.zmx.weblog.common.enums.ResponseCodeEnum;
 import com.zmx.weblog.common.exception.BizException;
 import com.zmx.weblog.common.utils.PageResponse;
 import com.zmx.weblog.common.utils.Response;
+import com.zmx.weblog.web.convert.ArticleConvert;
 import com.zmx.weblog.web.model.vo.category.FindCategoryArticlePageListReqVO;
 import com.zmx.weblog.web.model.vo.category.FindCategoryArticlePageListRspVO;
 import com.zmx.weblog.web.model.vo.category.FindCategoryListRspVO;
@@ -21,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -90,12 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
         List<FindCategoryArticlePageListRspVO> vos = null;
         if (!CollectionUtils.isEmpty(articleDOS)) {
             vos = articleDOS.stream()
-                    // .map(ArticleConvert.INSTANCE::convertDO2CategoryAr   ticleVO)
-                    .map(articleDO -> FindCategoryArticlePageListRspVO.builder()
-                            .id(articleDO.getId())
-                            .cover(articleDO.getCover())
-                            .title(articleDO.getTitle())
-                            .createDate(LocalDate.from(articleDO.getCreateTime())).build())
+                    .map(ArticleConvert.INSTANCE::convertDO2CategoryArticleVO)
                     .collect(Collectors.toList());
         }
 

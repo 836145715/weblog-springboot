@@ -57,17 +57,6 @@
             <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Mapstruct 属性映射 -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-        </dependency>
-
 
     </dependencies>
 
