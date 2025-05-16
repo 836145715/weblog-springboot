@@ -94,7 +94,7 @@ public class CategoryServiceImpl implements CategoryService {
                     .collect(Collectors.toList());
         }
 
-        return PageResponse.success(vos);
+        return PageResponse.success(articlePage,vos);
     }
 
 }
