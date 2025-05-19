@@ -141,7 +141,7 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         }
 
         // 查询内容
-        ArticleContentDO content = articleContentMapper.selectContentByArticleId(articleId);
+        ArticleContentDO content = articleContentMapper.selectByArticleId(articleId);
 
         // 查询分类
         ArticleCategoryRelDO categoryRel = articleCategoryRelMapper.selectByArticleId(articleId);

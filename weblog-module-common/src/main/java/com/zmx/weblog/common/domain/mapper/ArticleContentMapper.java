@@ -24,7 +24,7 @@ public interface ArticleContentMapper extends BaseMapper<ArticleContentDO> {
      * @param articleId 文章ID
      * @return 文章内容
      */
-    default ArticleContentDO selectContentByArticleId(Long articleId) {
+    default ArticleContentDO selectByArticleId(Long articleId) {
         return selectOne(new LambdaQueryWrapper<ArticleContentDO>()
                 .eq(ArticleContentDO::getArticleId, articleId));
     }

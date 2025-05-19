@@ -2,16 +2,18 @@ package com.zmx.weblog.web.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zmx.weblog.common.domain.dos.ArticleCategoryRelDO;
-import com.zmx.weblog.common.domain.dos.ArticleDO;
-import com.zmx.weblog.common.domain.dos.ArticleTagRelDO;
-import com.zmx.weblog.common.domain.dos.CategoryDO;
-import com.zmx.weblog.common.domain.dos.TagDO;
+import com.zmx.weblog.common.domain.dos.*;
 import com.zmx.weblog.common.domain.mapper.*;
+import com.zmx.weblog.common.enums.ResponseCodeEnum;
+import com.zmx.weblog.common.exception.BizException;
 import com.zmx.weblog.common.utils.PageResponse;
 import com.zmx.weblog.common.utils.Response;
 import com.zmx.weblog.web.convert.ArticleConvert;
+import com.zmx.weblog.web.markdown.MarkdownHelper;
+import com.zmx.weblog.web.model.vo.article.FindArticleDetailReqVO;
+import com.zmx.weblog.web.model.vo.article.FindArticleDetailRspVO;
 import com.zmx.weblog.web.model.vo.article.FindIndexArticlePageListRspVO;
+import com.zmx.weblog.web.model.vo.article.FindPreNextArticleRspVO;
 import com.zmx.weblog.web.model.vo.category.FindCategoryListRspVO;
 import com.zmx.weblog.web.model.vo.category.FindIndexArticlePageListReqVO;
 import com.zmx.weblog.web.model.vo.tag.FindTagListRspVO;
@@ -37,6 +39,8 @@ public class ArticleServiceImpl implements ArticleService {
     private TagMapper tagMapper;
     @Autowired
     private ArticleTagRelMapper articleTagRelMapper;
+    @Autowired
+    private ArticleContentMapper articleContentMapper;
 
     @Override
     public Response findArticlePageList(FindIndexArticlePageListReqVO findIndexArticlePageListReqVO) {
@@ -124,4 +128,70 @@ public class ArticleServiceImpl implements ArticleService {
 
         return PageResponse.success(articlePage,vos);
     }
+
+    @Override
+    public Response findArticleDetail(FindArticleDetailReqVO reqVO) {
+        Long articleId = reqVO.getArticleId();
+        ArticleDO articleDO = articleMapper.selectById(articleId);
+
+        //判断文章是否存在
+        if (Objects.isNull(articleDO)) {
+            log.warn("====> 该文章不存在，articleId:{}",articleId);
+            throw  new BizException(ResponseCodeEnum.ARTICLE_NOT_FOUND);
+        }
+
+        //查询正文
+        ArticleContentDO articleContentDO = articleContentMapper.selectByArticleId(articleId);
+
+        //DO转VO
+        FindArticleDetailRspVO rspVo = FindArticleDetailRspVO.builder()
+                .title(articleDO.getTitle())
+                .createTime(articleDO.getCreateTime())
+                .readNum(articleDO.getReadNum())
+                .content(MarkdownHelper.convertMarkdown2Html(articleContentDO.getContent())).build();
+
+        //查询所属分类
+        ArticleCategoryRelDO articleCategoryRelDO = articleCategoryRelMapper.selectByArticleId(articleId);
+        CategoryDO categoryDO = categoryMapper.selectById(articleCategoryRelDO.getCategoryId());
+
+        rspVo.setCategoryId(categoryDO.getId());
+        rspVo.setCategoryName(categoryDO.getName());
+
+        //查询标签
+        List<ArticleTagRelDO> articleTagRelDOS = articleTagRelMapper.selectByArticleId(articleId);
+        List<Long> tagIds = articleTagRelDOS.stream().map(ArticleTagRelDO::getTagId).collect(Collectors.toList());
+        List<TagDO> tagDOs = tagMapper.selectByIds(tagIds);
+
+        //标签DO转VO
+        List<FindTagListRspVO> tagVOs = tagDOs.stream()
+               .map(tagDO -> FindTagListRspVO.builder().id(tagDO.getId()).name(tagDO.getName()).build())
+               .collect(Collectors.toList());
+
+        rspVo.setTags(tagVOs);
+
+        //查询上一篇文章
+        ArticleDO preArticleDO = articleMapper.selectPreArticle(articleId);
+        if (Objects.nonNull(preArticleDO)){
+            FindPreNextArticleRspVO preArticleRspVO = FindPreNextArticleRspVO.builder()
+                    .articleId(preArticleDO.getId())
+                    .articleTitle(preArticleDO.getTitle())
+                    .build();
+            rspVo.setPreArticle(preArticleRspVO);
+        }
+
+        //查询下一篇文章
+        ArticleDO nextArticleDO = articleMapper.selectNextArticle(articleId);
+        if (Objects.nonNull(nextArticleDO)){
+            FindPreNextArticleRspVO nextArticleRspVO = FindPreNextArticleRspVO.builder()
+                   .articleId(nextArticleDO.getId())
+                   .articleTitle(nextArticleDO.getTitle())
+                   .build();
+            rspVo.setNextArticle(nextArticleRspVO);
+        }
+
+        return  Response.success(rspVo);
+
+    }
+
+
 }

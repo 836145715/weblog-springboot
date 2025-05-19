@@ -3,12 +3,14 @@ package com.zmx.weblog.common.domain.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zmx.weblog.common.domain.dos.TagDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -77,5 +79,20 @@ public interface TagMapper extends BaseMapper<TagDO> {
      * 注意：需要在TagDO.name上有唯一约束
      */
     int insertBatch(@Param("names") List<String> names);
+
+
+    /**
+     * 根据标签 ID 批量查询
+     * @param tagIds
+     * @return
+     */
+    default List<TagDO> selectByIds(List<Long> tagIds){
+        if (CollectionUtils.isEmpty(tagIds)){
+            return Collections.emptyList();
+        }
+        LambdaQueryWrapper<TagDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(TagDO::getId, tagIds);
+        return selectList(wrapper);
+    }
 
 }
