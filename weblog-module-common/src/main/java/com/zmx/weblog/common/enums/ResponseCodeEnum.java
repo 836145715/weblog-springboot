@@ -35,6 +35,7 @@ public enum ResponseCodeEnum {
 
     TAG_IS_USED("20012", "该标签下包含文章，请先删除对应文章，才能删除！"),
 
+    TAG_NOT_FOUND("20013", "分类不存在！"),
     ;
 
     // 异常码

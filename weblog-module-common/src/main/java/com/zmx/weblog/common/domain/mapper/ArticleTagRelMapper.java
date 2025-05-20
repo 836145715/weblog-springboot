@@ -2,11 +2,11 @@ package com.zmx.weblog.common.domain.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.zmx.weblog.common.domain.dos.ArticleTagRelDO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper
 public interface ArticleTagRelMapper extends BaseMapper<ArticleTagRelDO> {
@@ -61,4 +61,16 @@ public interface ArticleTagRelMapper extends BaseMapper<ArticleTagRelDO> {
                 new LambdaQueryWrapper<ArticleTagRelDO>()
                         .eq(ArticleTagRelDO::getTagId, tagId).last("limit 1"));
     }
+
+
+    /**
+     * 查询该标签 ID 下所有关联记录
+     * @param tagId
+     * @return
+     */
+    default List<ArticleTagRelDO> selectByTagId(Long tagId) {
+        return selectList(Wrappers.<ArticleTagRelDO>lambdaQuery()
+                .eq(ArticleTagRelDO::getTagId, tagId));
+    }
+
 }
