@@ -2,6 +2,7 @@ package com.zmx.weblog.web.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zmx.weblog.admin.event.ReadArticleEvent;
 import com.zmx.weblog.common.domain.dos.*;
 import com.zmx.weblog.common.domain.mapper.*;
 import com.zmx.weblog.common.enums.ResponseCodeEnum;
@@ -20,6 +21,7 @@ import com.zmx.weblog.web.model.vo.tag.FindTagListRspVO;
 import com.zmx.weblog.web.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,6 +43,8 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleTagRelMapper articleTagRelMapper;
     @Autowired
     private ArticleContentMapper articleContentMapper;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     public Response findArticlePageList(FindIndexArticlePageListReqVO findIndexArticlePageListReqVO) {
@@ -188,6 +192,9 @@ public class ArticleServiceImpl implements ArticleService {
                    .build();
             rspVo.setNextArticle(nextArticleRspVO);
         }
+
+        //文章发布订阅事件
+        eventPublisher.publishEvent(new ReadArticleEvent(this,articleId));
 
         return  Response.success(rspVo);
 
