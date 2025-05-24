@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmx.weblog.common.domain.mapper.ArticleMapper">
+    
+    <!-- 查询指定日期范围内的文章发布数量统计 -->
+    <select id="selectDateArticlePublishCount" resultType="com.zmx.weblog.common.domain.dos.ArticlePublishCountDO">
+        SELECT
+            DATE(create_time) as date,
+            COUNT(*) as count
+        FROM
+            t_article
+        WHERE
+            create_time BETWEEN #{startDate} AND #{endDate}
+        GROUP BY
+            DATE(create_time)
+    </select>
+    
+</mapper>

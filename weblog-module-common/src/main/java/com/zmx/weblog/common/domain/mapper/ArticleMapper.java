@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zmx.weblog.common.domain.dos.ArticleDO;
+import com.zmx.weblog.common.domain.dos.ArticlePublishCountDO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDate;
@@ -90,5 +91,21 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
         //执行SQL UPDATE t_article SET  read_num = read_num + 1 WHERE (id = XX)
         return  update(null,Wrappers.<ArticleDO>lambdaUpdate().setSql("read_num = read_num + 1").eq(ArticleDO::getId,articleId));
     }
+
+
+    /**
+     * 查询所有文章的阅读量
+     * @return
+     */
+    default List<ArticleDO> selectAllReadNum() {
+        // 设置仅查询 read_num 字段
+        return selectList(Wrappers.<ArticleDO>lambdaQuery()
+                .select(ArticleDO::getReadNum));
+    }
+
+
+
+    List<ArticlePublishCountDO> selectDateArticlePublishCount(LocalDate startDate, LocalDate endDate);
+
 
 }

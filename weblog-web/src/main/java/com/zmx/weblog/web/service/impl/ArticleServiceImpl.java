@@ -27,6 +27,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * 文章服务实现类
+ */
 @Slf4j
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -51,7 +54,7 @@ public class ArticleServiceImpl implements ArticleService {
         long current = findIndexArticlePageListReqVO.getCurrent();
         long size = findIndexArticlePageListReqVO.getSize();
         // 分页查询文章主体记录
-        Page<ArticleDO> articlePage = articleMapper.selectPageList(null,null,null,current,size);
+        Page<ArticleDO> articlePage = articleMapper.selectPageList(null, null, null, current, size);
         // 返回得分页数据
         List<ArticleDO> articleDOList = articlePage.getRecords();
 
@@ -97,7 +100,7 @@ public class ArticleServiceImpl implements ArticleService {
             });
 
             // 设置文章标签
-            //查询所有标签
+            // 查询所有标签
             List<TagDO> tagDOS = tagMapper.selectList();
             // 转为MAP 方便后续根据分类ID 批量查询所有关联记录
             Map<Long, String> tagIdNameMap = tagDOS.stream().collect(Collectors.toMap(TagDO::getId, TagDO::getName));
@@ -130,7 +133,7 @@ public class ArticleServiceImpl implements ArticleService {
             });
         }
 
-        return PageResponse.success(articlePage,vos);
+        return PageResponse.success(articlePage, vos);
     }
 
     @Override
@@ -138,44 +141,44 @@ public class ArticleServiceImpl implements ArticleService {
         Long articleId = reqVO.getArticleId();
         ArticleDO articleDO = articleMapper.selectById(articleId);
 
-        //判断文章是否存在
+        // 判断文章是否存在
         if (Objects.isNull(articleDO)) {
-            log.warn("====> 该文章不存在，articleId:{}",articleId);
-            throw  new BizException(ResponseCodeEnum.ARTICLE_NOT_FOUND);
+            log.warn("====> 该文章不存在，articleId:{}", articleId);
+            throw new BizException(ResponseCodeEnum.ARTICLE_NOT_FOUND);
         }
 
-        //查询正文
+        // 查询正文
         ArticleContentDO articleContentDO = articleContentMapper.selectByArticleId(articleId);
 
-        //DO转VO
+        // DO转VO
         FindArticleDetailRspVO rspVo = FindArticleDetailRspVO.builder()
                 .title(articleDO.getTitle())
                 .createTime(articleDO.getCreateTime())
                 .readNum(articleDO.getReadNum())
                 .content(MarkdownHelper.convertMarkdown2Html(articleContentDO.getContent())).build();
 
-        //查询所属分类
+        // 查询所属分类
         ArticleCategoryRelDO articleCategoryRelDO = articleCategoryRelMapper.selectByArticleId(articleId);
         CategoryDO categoryDO = categoryMapper.selectById(articleCategoryRelDO.getCategoryId());
 
         rspVo.setCategoryId(categoryDO.getId());
         rspVo.setCategoryName(categoryDO.getName());
 
-        //查询标签
+        // 查询标签
         List<ArticleTagRelDO> articleTagRelDOS = articleTagRelMapper.selectByArticleId(articleId);
         List<Long> tagIds = articleTagRelDOS.stream().map(ArticleTagRelDO::getTagId).collect(Collectors.toList());
         List<TagDO> tagDOs = tagMapper.selectByIds(tagIds);
 
-        //标签DO转VO
+        // 标签DO转VO
         List<FindTagListRspVO> tagVOs = tagDOs.stream()
-               .map(tagDO -> FindTagListRspVO.builder().id(tagDO.getId()).name(tagDO.getName()).build())
-               .collect(Collectors.toList());
+                .map(tagDO -> FindTagListRspVO.builder().id(tagDO.getId()).name(tagDO.getName()).build())
+                .collect(Collectors.toList());
 
         rspVo.setTags(tagVOs);
 
-        //查询上一篇文章
+        // 查询上一篇文章
         ArticleDO preArticleDO = articleMapper.selectPreArticle(articleId);
-        if (Objects.nonNull(preArticleDO)){
+        if (Objects.nonNull(preArticleDO)) {
             FindPreNextArticleRspVO preArticleRspVO = FindPreNextArticleRspVO.builder()
                     .articleId(preArticleDO.getId())
                     .articleTitle(preArticleDO.getTitle())
@@ -183,22 +186,21 @@ public class ArticleServiceImpl implements ArticleService {
             rspVo.setPreArticle(preArticleRspVO);
         }
 
-        //查询下一篇文章
+        // 查询下一篇文章
         ArticleDO nextArticleDO = articleMapper.selectNextArticle(articleId);
-        if (Objects.nonNull(nextArticleDO)){
+        if (Objects.nonNull(nextArticleDO)) {
             FindPreNextArticleRspVO nextArticleRspVO = FindPreNextArticleRspVO.builder()
-                   .articleId(nextArticleDO.getId())
-                   .articleTitle(nextArticleDO.getTitle())
-                   .build();
+                    .articleId(nextArticleDO.getId())
+                    .articleTitle(nextArticleDO.getTitle())
+                    .build();
             rspVo.setNextArticle(nextArticleRspVO);
         }
 
-        //文章发布订阅事件
-        eventPublisher.publishEvent(new ReadArticleEvent(this,articleId));
+        // 文章发布订阅事件
+        eventPublisher.publishEvent(new ReadArticleEvent(this, articleId));
 
-        return  Response.success(rspVo);
+        return Response.success(rspVo);
 
     }
-
 
 }

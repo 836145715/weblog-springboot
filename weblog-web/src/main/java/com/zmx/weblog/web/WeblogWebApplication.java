@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.zmx.weblog.*" })
+@ComponentScan(basePackages = { "com.zmx.weblog" })
 public class WeblogWebApplication {
 
     public static void main(String[] args) {
