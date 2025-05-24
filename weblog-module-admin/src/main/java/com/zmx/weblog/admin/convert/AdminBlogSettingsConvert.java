@@ -6,12 +6,13 @@ import com.zmx.weblog.common.domain.dos.BlogSettingsDO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+// 文件已重命名为 AdminBlogSettingsConvert.java，内容如下：
 @Mapper
-public interface BlogSettingsConvert {
+public interface AdminBlogSettingsConvert {
     /**
      * 初始化 convert 实例
      */
-    BlogSettingsConvert INSTANCE = Mappers.getMapper(BlogSettingsConvert.class);
+    AdminBlogSettingsConvert INSTANCE = Mappers.getMapper(AdminBlogSettingsConvert.class);
 
     BlogSettingsDO convertVO2DO(UpdateBlogSettingsReqVO bean);
 
